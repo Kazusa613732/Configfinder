@@ -1,6 +1,6 @@
 # 🛡️ Configfinder - Sensitive File Scanner
 
-**Configfinder** 是一款命令列工具，專為滲透測試與資安檢測設計，用於掃描網站中常見的機敏設定檔案，支援副檔名分析、Content-Type 比對、登入態模擬、延遲控制與遞迴掃描等功能。
+**Configfinder** 是一款命令列工具，專為滲透測試與資安檢測設計，用於掃描網站中常見的機敏設定檔案，支援Content-Type 比對、登入態模擬、延遲控制與遞迴掃描等功能。
 
 ---
 
