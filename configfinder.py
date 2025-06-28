@@ -29,10 +29,10 @@ COMMON_PATHS = [
     ".DS_Store", "Thumbs.db",
 
     # 測試與資訊
-    "phpinfo.php", "phpinfo", "info.php", "test.php",
+    "phpinfo.php", "phpinfo", "info.php", "test.php", "admin.php",
 
     # 目錄索引（會偵測 Index of）
-    "logs/", "backup/", "db/", "old/", "admin/", "api/", "uploads/"
+    "log/" ,"logs/", "backup/", "db/", "old/", "admin/", "api/", "uploads/", "sql/", "download/", "phpMyAdmin/", "phpmyadmin/",
 ]
 
 import concurrent.futures
