@@ -17,7 +17,7 @@ COMMON_PATHS = [
     # 資料庫與備份
     "database.sql", "db.sql", "dump.sql", "backup.sql",
     "backup.zip", "backup.tar.gz", "site_backup.tar.gz", "db.bak", "db.backup",
-    "logs/error.log", "debug.log","error_log",
+    "logs/error.log", "debug.log", "error_log",
 
     # .git & 隱藏檔
     ".git/config", ".git/HEAD", ".gitignore", ".gitattributes",
@@ -38,6 +38,7 @@ COMMON_PATHS = [
 import concurrent.futures
 
 def scan_sensitive_files(base_url, min_delay, max_delay, threads, max_depth=3, subdomain_scope=True, cookies=None, debug=False, follow_root_only=False):
+    baseline_size = None
     from urllib.parse import urlparse
     from bs4 import BeautifulSoup
     from collections import deque
@@ -85,6 +86,11 @@ def scan_sensitive_files(base_url, min_delay, max_delay, threads, max_depth=3, s
                 headers["Cookie"] = cookies
             resp = requests.get(target_url, headers=headers, timeout=5, allow_redirects=True)
             if resp.status_code == 200:
+                size_diff = abs(len(resp.content) - baseline_size) if baseline_size else 9999
+                if size_diff < 50:
+                    if debug:
+                        print(f"{Fore.LIGHTBLACK_EX}[-] 回應大小與 baseline 相同（diff={size_diff}），排除: {target_url}{Style.RESET_ALL}")
+                    return None
                 content_type = resp.headers.get("Content-Type", "").lower()
                 indicators = ["phpinfo", "sql", "ssh-rsa", "root:", "mysql", "BEGIN RSA PRIVATE KEY"]
                 ext_map = {
@@ -98,6 +104,12 @@ def scan_sensitive_files(base_url, min_delay, max_delay, threads, max_depth=3, s
                 import os
                 _, ext = os.path.splitext(path.lower())
                 expected_ct = ext_map.get(ext, '')
+                size_diff = abs(len(resp.content) - baseline_size) if baseline_size else 9999
+                if size_diff < 50:
+                    if debug:
+                        print(f"{Fore.LIGHTBLACK_EX}[-] 回應大小與 baseline 相同（diff={size_diff}），排除: {target_url}{Style.RESET_ALL}")
+                    return None
+
                 is_sensitive = (
                     expected_ct in content_type or
                     any(kw in resp.text.lower() for kw in indicators) or
@@ -126,6 +138,16 @@ def scan_sensitive_files(base_url, min_delay, max_delay, threads, max_depth=3, s
     # 遞迴爬網址並掃描每層目錄
     found = []
     print(f"[*] 開始掃描: {base_url}")
+        # 建立 baseline 回應大小
+    try:
+        headers = {"User-Agent": random.choice(user_agents)}
+        if cookies:
+            headers["Cookie"] = cookies
+        baseline_resp = requests.get(base_url.rstrip('/') + "/nonexistent_baseline_404_test", headers=headers, timeout=5)
+        baseline_size = len(baseline_resp.content)
+    except Exception:
+        baseline_size = None
+
     while queue:
         current_url, depth = queue.popleft()
         norm_url = normalize_url(current_url)
