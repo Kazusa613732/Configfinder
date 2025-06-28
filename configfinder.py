@@ -17,7 +17,7 @@ COMMON_PATHS = [
     # 資料庫與備份
     "database.sql", "db.sql", "dump.sql", "backup.sql",
     "backup.zip", "backup.tar.gz", "site_backup.tar.gz", "db.bak", "db.backup",
-    "logs/error.log", "debug.log",
+    "logs/error.log", "debug.log","error_log",
 
     # .git & 隱藏檔
     ".git/config", ".git/HEAD", ".gitignore", ".gitattributes",
