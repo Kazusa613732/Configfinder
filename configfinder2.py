@@ -46,7 +46,7 @@ COMMON_PATHS = [
     "composer.lock", "composer.json", "package.json", "yarn.lock",
     ".DS_Store", "Thumbs.db",
     "phpinfo.php", "phpinfo", "info.php", "test.php", "admin.php",
-    "log/", "logs/", "backup/", "db/", "old/", "admin/", "api/", "uploads/", "sql/", "download/", "phpMyAdmin/", "phpmyadmin/", "Vpn/",
+    "log/", "logs/", "backup/", "db/", "old/", "admin/", "api/", "uploads/", "sql/", "download/", "phpMyAdmin/", "phpmyadmin/", "Vpn/", "manual/", "mailman/", "mailman/listinfo",
 ]
 
 EXCLUDED_KEYWORDS = ["css", "js", "img", "font", "icon", "static"]
